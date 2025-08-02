@@ -1,5 +1,5 @@
-use super::mod_error::TimeTemperatureCurveError;
 use super::interface::TimeTemperatureCurve;
+use super::mod_error::TimeTemperatureCurveError;
 use super::polyline_shared::polyline_temperature_at;
 
 /// Polyline interpolation strategy for time-temperature curve, const-generic version for compile-time usage.
@@ -34,14 +34,11 @@ impl<const N: usize> TimeTemperatureCurve for ImplPolylineConst<N> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use super::super::mod_error::TimeTemperatureCurveError;
+    use super::*;
 
-    const VALID: ImplPolylineConst<3> = ImplPolylineConst::from_array([
-        (0.0, 10.0),
-        (5.0, 20.0),
-        (10.0, 30.0),
-    ]);
+    const VALID: ImplPolylineConst<3> =
+        ImplPolylineConst::from_array([(0.0, 10.0), (5.0, 20.0), (10.0, 30.0)]);
 
     #[test]
     fn test_valid_const_polyline() {

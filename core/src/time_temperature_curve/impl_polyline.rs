@@ -1,5 +1,5 @@
-use super::mod_error::TimeTemperatureCurveError;
 use super::interface::TimeTemperatureCurve;
+use super::mod_error::TimeTemperatureCurveError;
 use super::polyline_shared::polyline_temperature_at;
 
 /// Polyline interpolation strategy for time-temperature curve.
@@ -13,11 +13,17 @@ impl ImplPolyline {
         if points.is_empty() {
             return Err(TimeTemperatureCurveError::EmptyPoints);
         }
-        if points.iter().any(|(t, temp)| t.is_nan() || temp.is_nan() || t.is_infinite() || temp.is_infinite()) {
+        if points
+            .iter()
+            .any(|(t, temp)| t.is_nan() || temp.is_nan() || t.is_infinite() || temp.is_infinite())
+        {
             return Err(TimeTemperatureCurveError::InvalidValue);
         }
         points.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
-        if points.windows(2).any(|w| (w[0].0 - w[1].0).abs() < std::f64::EPSILON) {
+        if points
+            .windows(2)
+            .any(|w| (w[0].0 - w[1].0).abs() < std::f64::EPSILON)
+        {
             return Err(TimeTemperatureCurveError::DuplicateTime);
         }
         Ok(ImplPolyline { points })
@@ -63,22 +69,40 @@ mod tests {
     #[test]
     fn test_duplicate_time_error() {
         let result = ImplPolyline::new(vec![(0.0, 1.0), (0.0, 2.0)]);
-        assert!(matches!(result, Err(TimeTemperatureCurveError::DuplicateTime)));
+        assert!(matches!(
+            result,
+            Err(TimeTemperatureCurveError::DuplicateTime)
+        ));
     }
 
     #[test]
     fn test_invalid_value_error() {
         let result = ImplPolyline::new(vec![(0.0, 1.0), (std::f64::NAN, 2.0)]);
-        assert!(matches!(result, Err(TimeTemperatureCurveError::InvalidValue)));
+        assert!(matches!(
+            result,
+            Err(TimeTemperatureCurveError::InvalidValue)
+        ));
         let result = ImplPolyline::new(vec![(0.0, 1.0), (std::f64::INFINITY, 2.0)]);
-        assert!(matches!(result, Err(TimeTemperatureCurveError::InvalidValue)));
+        assert!(matches!(
+            result,
+            Err(TimeTemperatureCurveError::InvalidValue)
+        ));
     }
 
     #[test]
     fn test_invalid_time_error() {
         let curve = ImplPolyline::new(vec![(0.0, 1.0), (1.0, 2.0)]).unwrap();
-        assert!(matches!(curve.temperature_at(f64::NAN), Err(TimeTemperatureCurveError::InvalidValue)));
-        assert!(matches!(curve.temperature_at(f64::INFINITY), Err(TimeTemperatureCurveError::InvalidValue)));
-        assert!(matches!(curve.temperature_at(f64::NEG_INFINITY), Err(TimeTemperatureCurveError::InvalidValue)));
+        assert!(matches!(
+            curve.temperature_at(f64::NAN),
+            Err(TimeTemperatureCurveError::InvalidValue)
+        ));
+        assert!(matches!(
+            curve.temperature_at(f64::INFINITY),
+            Err(TimeTemperatureCurveError::InvalidValue)
+        ));
+        assert!(matches!(
+            curve.temperature_at(f64::NEG_INFINITY),
+            Err(TimeTemperatureCurveError::InvalidValue)
+        ));
     }
 }

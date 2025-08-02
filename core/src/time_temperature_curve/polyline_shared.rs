@@ -1,7 +1,10 @@
 use super::mod_error::TimeTemperatureCurveError;
 
 /// Shared polyline temperature interpolation for slices.
-pub fn polyline_temperature_at(points: &[(f64, f64)], time: f64) -> Result<f64, TimeTemperatureCurveError> {
+pub fn polyline_temperature_at(
+    points: &[(f64, f64)],
+    time: f64,
+) -> Result<f64, TimeTemperatureCurveError> {
     if time.is_nan() || time.is_infinite() {
         return Err(TimeTemperatureCurveError::InvalidValue);
     }
@@ -57,8 +60,17 @@ mod tests {
     #[test]
     fn test_invalid_time() {
         let pts = [(0.0, 1.0), (1.0, 2.0)];
-        assert!(matches!(polyline_temperature_at(&pts, f64::NAN), Err(TimeTemperatureCurveError::InvalidValue)));
-        assert!(matches!(polyline_temperature_at(&pts, f64::INFINITY), Err(TimeTemperatureCurveError::InvalidValue)));
-        assert!(matches!(polyline_temperature_at(&pts, f64::NEG_INFINITY), Err(TimeTemperatureCurveError::InvalidValue)));
+        assert!(matches!(
+            polyline_temperature_at(&pts, f64::NAN),
+            Err(TimeTemperatureCurveError::InvalidValue)
+        ));
+        assert!(matches!(
+            polyline_temperature_at(&pts, f64::INFINITY),
+            Err(TimeTemperatureCurveError::InvalidValue)
+        ));
+        assert!(matches!(
+            polyline_temperature_at(&pts, f64::NEG_INFINITY),
+            Err(TimeTemperatureCurveError::InvalidValue)
+        ));
     }
 }
