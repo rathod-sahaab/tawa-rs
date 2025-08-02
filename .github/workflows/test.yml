@@ -22,10 +22,6 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - name: Set up Rust
-        uses: actions/setup-rust@v1
-        with:
-          rust-version: stable
       - name: Install cargo-nextest (faster test runner)
         run: cargo install cargo-nextest
       - name: Build
