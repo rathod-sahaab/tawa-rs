@@ -1,3 +1,5 @@
+use super::mod_error::TimeTemperatureCurveError;
+
 /// Trait for time-temperature curve interpolation strategies.
 pub trait TimeTemperatureCurve {
     /// Get the temperature at a given time.
@@ -9,5 +11,5 @@ pub trait TimeTemperatureCurve {
     /// # Returns
     ///
     /// The interpolated temperature at the specified time.
-    fn temperature_at(&self, time: f64) -> f64;
+    fn temperature_at(&self, time: f64) -> Result<f64, TimeTemperatureCurveError>;
 }
