@@ -62,7 +62,7 @@ mod tests {
     #[test]
     fn test_insert_and_get() {
         let mut store = KvStoreBTreeImpl::new("curve");
-        let id = store.insert(42);
+        let _id = store.insert(42);
         assert_eq!(store.get("curve_0"), Some(&42));
         assert_eq!(store.get("other_0"), None); // wrong prefix
     }
@@ -70,7 +70,7 @@ mod tests {
     #[test]
     fn test_remove() {
         let mut store = KvStoreBTreeImpl::new("foo");
-        let id = store.insert(123);
+        let _id = store.insert(123);
         assert_eq!(store.get("foo_0"), Some(&123));
         assert!(store.remove("foo_0"));
         assert_eq!(store.get("foo_0"), None);
@@ -85,5 +85,14 @@ mod tests {
         assert_ne!(id1, id2);
         assert_eq!(store.get("bar_0"), Some(&1));
         assert_eq!(store.get("bar_1"), Some(&2));
+    }
+
+    #[test]
+    fn test_key_sequentiality() {
+        let mut store = KvStoreBTreeImpl::new("seq");
+        for i in 0..5 {
+            let key = store.insert(i);
+            assert_eq!(key, alloc::format!("seq_{}", i));
+        }
     }
 }
