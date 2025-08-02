@@ -22,7 +22,7 @@ impl ImplPolyline {
         points.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
         if points
             .windows(2)
-            .any(|w| (w[0].0 - w[1].0).abs() < std::f64::EPSILON)
+            .any(|w| (w[0].0 - w[1].0).abs() < f64::EPSILON)
         {
             return Err(TimeTemperatureCurveError::DuplicateTime);
         }
@@ -77,12 +77,12 @@ mod tests {
 
     #[test]
     fn test_invalid_value_error() {
-        let result = ImplPolyline::new(vec![(0.0, 1.0), (std::f64::NAN, 2.0)]);
+        let result = ImplPolyline::new(vec![(0.0, 1.0), (f64::NAN, 2.0)]);
         assert!(matches!(
             result,
             Err(TimeTemperatureCurveError::InvalidValue)
         ));
-        let result = ImplPolyline::new(vec![(0.0, 1.0), (std::f64::INFINITY, 2.0)]);
+        let result = ImplPolyline::new(vec![(0.0, 1.0), (f64::INFINITY, 2.0)]);
         assert!(matches!(
             result,
             Err(TimeTemperatureCurveError::InvalidValue)
