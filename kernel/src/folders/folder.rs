@@ -15,7 +15,11 @@ pub struct Folder {
 
 impl Folder {
     pub const fn new(name: &'static str) -> Self {
-        Self { name, entries: [None; 16], count: 0 }
+        Self {
+            name,
+            entries: [None; 16],
+            count: 0,
+        }
     }
     pub fn add_entry(&mut self, entry: FolderEntry) -> bool {
         if self.count < self.entries.len() {

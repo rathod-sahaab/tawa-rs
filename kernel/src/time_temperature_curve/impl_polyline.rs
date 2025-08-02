@@ -3,6 +3,7 @@ use super::mod_error::TimeTemperatureCurveError;
 use super::polyline_shared::polyline_temperature_at;
 extern crate alloc;
 use alloc::vec::Vec;
+use core::result::Result;
 
 /// Polyline interpolation strategy for time-temperature curve.
 #[derive(Debug, Clone, PartialEq)]

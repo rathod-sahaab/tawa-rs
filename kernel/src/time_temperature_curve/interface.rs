@@ -1,4 +1,5 @@
 use super::mod_error::TimeTemperatureCurveError;
+use core::result::Result;
 
 /// Trait for time-temperature curve interpolation strategies.
 pub trait TimeTemperatureCurve {

@@ -1,3 +1,7 @@
+use core::panic;
+use core::prelude::rust_2024::*;
+use core::result::Result;
+
 use super::interface::TimeTemperatureCurve;
 use super::polyline_shared::polyline_temperature_at;
 

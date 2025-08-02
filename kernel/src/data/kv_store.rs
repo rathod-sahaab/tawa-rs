@@ -1,5 +1,5 @@
 extern crate alloc;
-use alloc::string::{String};
+use alloc::string::String;
 
 /// Key-value store abstraction with string keys of the form "prefix_id".
 pub trait KvStore<V> {

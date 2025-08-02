@@ -1,12 +1,8 @@
 error[E0080]: evaluation of constant value failed
- --> tests/ui/invalid_nan.rs:3:44
+ --> tests/ui/invalid_nan.rs:4:5
   |
-3 |   const _INVALID_NAN: ImplPolylineConst<2> = ImplPolylineConst::from_array([
-  |  ____________________________________________^
-4 | |     (0.0, f64::NAN),
-5 | |     (1.0, 2.0),
-6 | | ]);
-  | |__^ evaluation panicked: InvalidValue: NaN or infinite value in polyline
+4 |     ImplPolylineConst::from_array([(0.0, f64::NAN), (1.0, 2.0)]);
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ evaluation panicked: InvalidValue: NaN or infinite value in polyline
   |
 note: inside `ImplPolylineConst::<2>::from_array`
  --> src/time_temperature_curve/impl_polyline_const.rs

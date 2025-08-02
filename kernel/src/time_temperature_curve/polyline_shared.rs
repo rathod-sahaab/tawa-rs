@@ -1,3 +1,5 @@
+use core::prelude::rust_2024::*;
+
 use super::mod_error::TimeTemperatureCurveError;
 
 /// Shared polyline temperature interpolation for slices.

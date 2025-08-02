@@ -1,7 +1,8 @@
 extern crate alloc;
+use super::kv_store::KvStore;
 use alloc::collections::BTreeMap;
 use alloc::string::{String, ToString};
-use super::kv_store::KvStore;
+use core::option::Option;
 
 /// A simple, no_std+alloc key-value store using BTreeMap and static prefix-checked keys.
 pub struct KvStoreBTreeImpl<V> {
@@ -12,7 +13,11 @@ pub struct KvStoreBTreeImpl<V> {
 
 impl<V> KvStoreBTreeImpl<V> {
     pub fn new(prefix: &'static str) -> Self {
-        Self { map: BTreeMap::new(), next_id: 0, prefix }
+        Self {
+            map: BTreeMap::new(),
+            next_id: 0,
+            prefix,
+        }
     }
     fn parse_prefix_id(&self, id: &str) -> Option<(String, u64)> {
         let mut parts = id.rsplitn(2, '_');
@@ -52,8 +57,8 @@ impl<V> KvStore<V> for KvStoreBTreeImpl<V> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use super::KvStore;
+    use super::*;
     #[test]
     fn test_insert_and_get() {
         let mut store = KvStoreBTreeImpl::new("curve");
