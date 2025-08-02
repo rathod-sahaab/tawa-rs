@@ -92,7 +92,7 @@ mod tests {
         let mut store = KvStoreBTreeImpl::new("seq");
         for i in 0..5 {
             let key = store.insert(i);
-            assert_eq!(key, alloc::format!("seq_{}", i));
+            assert_eq!(key, alloc::format!("seq_{i}"));
         }
     }
 }
