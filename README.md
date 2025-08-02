@@ -1,5 +1,8 @@
 # Tawa Hotplate Firmware
 
+![CI](https://github.com/rathod-sahaab/tawa-rs/actions/workflows/test.yml/badge.svg)
+[![codecov](https://codecov.io/gh/rathod-sahaab/tawa-rs/branch/main/graph/badge.svg)](https://codecov.io/gh/rathod-sahaab/tawa-rs)
+
 Tawa is an embedded firmware project for a soldering hotplate, designed to provide precise and customizable temperature control for electronics assembly and reflow soldering. The firmware is written in Rust and supports user-defined temperature curves for advanced soldering profiles.
 
 ## Features
