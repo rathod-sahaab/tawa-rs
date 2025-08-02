@@ -1,6 +1,8 @@
 use super::interface::TimeTemperatureCurve;
 use super::mod_error::TimeTemperatureCurveError;
 use super::polyline_shared::polyline_temperature_at;
+extern crate alloc;
+use alloc::vec::Vec;
 
 /// Polyline interpolation strategy for time-temperature curve.
 #[derive(Debug, Clone, PartialEq)]
@@ -39,6 +41,8 @@ impl TimeTemperatureCurve for ImplPolyline {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(test)]
+    use alloc::vec;
 
     #[test]
     fn test_empty_points() {

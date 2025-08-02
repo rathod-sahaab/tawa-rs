@@ -9,21 +9,4 @@ pub enum TimeTemperatureCurveError {
     InvalidValue,
 }
 
-impl std::fmt::Display for TimeTemperatureCurveError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TimeTemperatureCurveError::EmptyPoints => write!(
-                f,
-                "TimeTemperatureCurve cannot be created with empty points"
-            ),
-            TimeTemperatureCurveError::DuplicateTime => {
-                write!(f, "TimeTemperatureCurve cannot have duplicate time values")
-            }
-            TimeTemperatureCurveError::InvalidValue => {
-                write!(f, "TimeTemperatureCurve cannot have NaN or infinite values")
-            }
-        }
-    }
-}
-
-impl std::error::Error for TimeTemperatureCurveError {}
+// Removed std::fmt::Display and std::error::Error for no_std compatibility.
