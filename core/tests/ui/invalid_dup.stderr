@@ -2,7 +2,7 @@ error[E0080]: evaluation of constant value failed
  --> src/time_temperature_curve/impl_polyline_const.rs
   |
   |                 panic!("DuplicateTime: Duplicate time value in polyline");
-  |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the evaluated program panicked at 'DuplicateTime: Duplicate time value in polyline', $DIR/src/time_temperature_curve/impl_polyline_const.rs:19:17
+  |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the evaluated program panicked at 'DuplicateTime: Duplicate time value in polyline', $DIR/src/time_temperature_curve/impl_polyline_const.rs:21:17
   |
 note: inside `ImplPolylineConst::<2>::from_array`
  --> src/time_temperature_curve/impl_polyline_const.rs

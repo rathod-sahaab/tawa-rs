@@ -1,6 +1,6 @@
 use super::mod_error::TimeTemperatureCurveError;
-// use super::interface::TimeTemperatureCurve;
 use super::interface::TimeTemperatureCurve;
+use super::polyline_shared::polyline_temperature_at;
 
 /// Polyline interpolation strategy for time-temperature curve.
 #[derive(Debug, Clone, PartialEq)]
@@ -26,27 +26,7 @@ impl ImplPolyline {
 
 impl TimeTemperatureCurve for ImplPolyline {
     fn temperature_at(&self, time: f64) -> Result<f64, TimeTemperatureCurveError> {
-        if time.is_nan() || time.is_infinite() {
-            return Err(TimeTemperatureCurveError::InvalidValue);
-        }
-        if self.points.is_empty() {
-            return Ok(0.0);
-        }
-        if time <= self.points[0].0 {
-            return Ok(self.points[0].1);
-        }
-        if time >= self.points[self.points.len() - 1].0 {
-            return Ok(self.points[self.points.len() - 1].1);
-        }
-        match self.points.binary_search_by(|(t, _)| t.partial_cmp(&time).unwrap()) {
-            Ok(idx) => Ok(self.points[idx].1),
-            Err(idx) => {
-                let (t0, temp0) = self.points[idx - 1];
-                let (t1, temp1) = self.points[idx];
-                let ratio = (time - t0) / (t1 - t0);
-                Ok(temp0 + ratio * (temp1 - temp0))
-            }
-        }
+        polyline_temperature_at(&self.points, time)
     }
 }
 

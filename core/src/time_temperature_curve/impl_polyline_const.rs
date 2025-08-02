@@ -1,5 +1,6 @@
 use super::mod_error::TimeTemperatureCurveError;
 use super::interface::TimeTemperatureCurve;
+use super::polyline_shared::polyline_temperature_at;
 
 /// Polyline interpolation strategy for time-temperature curve, const-generic version for compile-time usage.
 #[derive(Debug, Clone, PartialEq)]
@@ -15,6 +16,7 @@ impl<const N: usize> ImplPolylineConst<N> {
             if !(t.is_finite() && temp.is_finite()) {
                 panic!("InvalidValue: NaN or infinite value in polyline");
             }
+            // Duplicate time check using iterators is not possible in const fn yet, so keep the loop
             if i > 0 && (points[i].0 - points[i - 1].0).abs() < f64::EPSILON {
                 panic!("DuplicateTime: Duplicate time value in polyline");
             }
@@ -26,38 +28,7 @@ impl<const N: usize> ImplPolylineConst<N> {
 
 impl<const N: usize> TimeTemperatureCurve for ImplPolylineConst<N> {
     fn temperature_at(&self, time: f64) -> Result<f64, TimeTemperatureCurveError> {
-        if time.is_nan() || time.is_infinite() {
-            return Err(TimeTemperatureCurveError::InvalidValue);
-        }
-        if N == 0 {
-            return Ok(0.0);
-        }
-        if time <= self.points[0].0 {
-            return Ok(self.points[0].1);
-        }
-        if time >= self.points[N - 1].0 {
-            return Ok(self.points[N - 1].1);
-        }
-        // Binary search for const arrays
-        let mut left = 0;
-        let mut right = N;
-        while left < right {
-            let mid = (left + right) / 2;
-            let t = self.points[mid].0;
-            if t < time {
-                left = mid + 1;
-            } else {
-                right = mid;
-            }
-        }
-        let idx = left;
-        if idx < N && (self.points[idx].0 - time).abs() < f64::EPSILON {
-            return Ok(self.points[idx].1);
-        }
-        let (t0, temp0) = self.points[idx - 1];
-        let (t1, temp1) = self.points[idx];
-        let ratio = (time - t0) / (t1 - t0);
-        Ok(temp0 + ratio * (temp1 - temp0))
+        polyline_temperature_at(&self.points, time)
     }
 }
 
