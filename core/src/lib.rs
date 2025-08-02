@@ -1,1 +1,1 @@
-mod time_temperature_curve;
+pub mod time_temperature_curve;

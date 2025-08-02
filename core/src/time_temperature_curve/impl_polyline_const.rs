@@ -8,19 +8,19 @@ pub struct ImplPolylineConst<const N: usize> {
 }
 
 impl<const N: usize> ImplPolylineConst<N> {
-    pub const fn from_array(points: [(f64, f64); N]) -> Result<Self, TimeTemperatureCurveError> {
+    pub const fn from_array(points: [(f64, f64); N]) -> Self {
         let mut i = 0;
         while i < N {
             let (t, temp) = points[i];
-            if t.is_nan() || temp.is_nan() || t.is_infinite() || temp.is_infinite() {
-                return Err(TimeTemperatureCurveError::InvalidValue);
+            if !(t.is_finite() && temp.is_finite()) {
+                panic!("InvalidValue: NaN or infinite value in polyline");
             }
             if i > 0 && (points[i].0 - points[i - 1].0).abs() < f64::EPSILON {
-                return Err(TimeTemperatureCurveError::DuplicateTime);
+                panic!("DuplicateTime: Duplicate time value in polyline");
             }
             i += 1;
         }
-        Ok(ImplPolylineConst { points })
+        Self { points }
     }
 }
 
@@ -59,4 +59,40 @@ impl<const N: usize> TimeTemperatureCurve for ImplPolylineConst<N> {
         let ratio = (time - t0) / (t1 - t0);
         Ok(temp0 + ratio * (temp1 - temp0))
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use super::super::mod_error::TimeTemperatureCurveError;
+
+    const VALID: ImplPolylineConst<3> = ImplPolylineConst::from_array([
+        (0.0, 10.0),
+        (5.0, 20.0),
+        (10.0, 30.0),
+    ]);
+
+    #[test]
+    fn test_valid_const_polyline() {
+        assert_eq!(VALID.temperature_at(-1.0), Ok(10.0));
+        assert_eq!(VALID.temperature_at(0.0), Ok(10.0));
+        assert_eq!(VALID.temperature_at(2.5), Ok(15.0));
+        assert_eq!(VALID.temperature_at(5.0), Ok(20.0));
+        assert_eq!(VALID.temperature_at(7.5), Ok(25.0));
+        assert_eq!(VALID.temperature_at(10.0), Ok(30.0));
+        assert_eq!(VALID.temperature_at(15.0), Ok(30.0));
+    }
+
+    // The following compile_fail tests are for documentation only; they will fail to compile if uncommented.
+    // To actually test compile-time errors, use trybuild or UI tests.
+    /*
+    const INVALID_NAN: ImplPolylineConst<2> = ImplPolylineConst::from_array([
+        (0.0, f64::NAN),
+        (1.0, 2.0),
+    ]);
+    const INVALID_DUP: ImplPolylineConst<2> = ImplPolylineConst::from_array([
+        (0.0, 1.0),
+        (0.0, 2.0),
+    ]);
+    */
 }
