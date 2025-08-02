@@ -22,14 +22,8 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - name: Install cargo-nextest (faster test runner)
-        run: cargo install cargo-nextest
-      - name: Build
-        run: cargo build --workspace --all-targets
-      - name: Run tests (unit + trybuild)
-        run: |
-          cargo nextest run --workspace
-          cargo test --workspace -- --test-threads=1 --nocapture
+      - name: Run tests
+        run: cargo test --workspace -- --nocapture
       - name: Check formatting
         run: cargo fmt --all -- --check
       - name: Lint
