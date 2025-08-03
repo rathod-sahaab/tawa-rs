@@ -8,11 +8,11 @@ use core::result::Result;
 /// Polyline interpolation strategy for time-temperature curve.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ImplPolyline {
-    pub points: Vec<(f64, f64)>,
+    pub points: Vec<(f32, f32)>,
 }
 
 impl ImplPolyline {
-    pub fn new(mut points: Vec<(f64, f64)>) -> Result<Self, TimeTemperatureCurveError> {
+    pub fn new(mut points: Vec<(f32, f32)>) -> Result<Self, TimeTemperatureCurveError> {
         if points.is_empty() {
             return Err(TimeTemperatureCurveError::EmptyPoints);
         }
@@ -25,7 +25,7 @@ impl ImplPolyline {
         points.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
         if points
             .windows(2)
-            .any(|w| (w[0].0 - w[1].0).abs() < f64::EPSILON)
+            .any(|w| (w[0].0 - w[1].0).abs() < f32::EPSILON)
         {
             return Err(TimeTemperatureCurveError::DuplicateTime);
         }
@@ -34,7 +34,7 @@ impl ImplPolyline {
 }
 
 impl TimeTemperatureCurve for ImplPolyline {
-    fn temperature_at(&self, time: f64) -> Result<f64, TimeTemperatureCurveError> {
+    fn temperature_at(&self, time: f32) -> Result<f32, TimeTemperatureCurveError> {
         polyline_temperature_at(&self.points, time)
     }
 }
@@ -82,12 +82,12 @@ mod tests {
 
     #[test]
     fn test_invalid_value_error() {
-        let result = ImplPolyline::new(vec![(0.0, 1.0), (f64::NAN, 2.0)]);
+        let result = ImplPolyline::new(vec![(0.0, 1.0), (f32::NAN, 2.0)]);
         assert!(matches!(
             result,
             Err(TimeTemperatureCurveError::InvalidValue)
         ));
-        let result = ImplPolyline::new(vec![(0.0, 1.0), (f64::INFINITY, 2.0)]);
+        let result = ImplPolyline::new(vec![(0.0, 1.0), (f32::INFINITY, 2.0)]);
         assert!(matches!(
             result,
             Err(TimeTemperatureCurveError::InvalidValue)
@@ -98,15 +98,15 @@ mod tests {
     fn test_invalid_time_error() {
         let curve = ImplPolyline::new(vec![(0.0, 1.0), (1.0, 2.0)]).unwrap();
         assert!(matches!(
-            curve.temperature_at(f64::NAN),
+            curve.temperature_at(f32::NAN),
             Err(TimeTemperatureCurveError::InvalidValue)
         ));
         assert!(matches!(
-            curve.temperature_at(f64::INFINITY),
+            curve.temperature_at(f32::INFINITY),
             Err(TimeTemperatureCurveError::InvalidValue)
         ));
         assert!(matches!(
-            curve.temperature_at(f64::NEG_INFINITY),
+            curve.temperature_at(f32::NEG_INFINITY),
             Err(TimeTemperatureCurveError::InvalidValue)
         ));
     }

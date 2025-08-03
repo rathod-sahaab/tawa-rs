@@ -12,5 +12,5 @@ pub trait TimeTemperatureCurve {
     /// # Returns
     ///
     /// The interpolated temperature at the specified time.
-    fn temperature_at(&self, time: f64) -> Result<f64, TimeTemperatureCurveError>;
+    fn temperature_at(&self, time: f32) -> Result<f32, TimeTemperatureCurveError>;
 }

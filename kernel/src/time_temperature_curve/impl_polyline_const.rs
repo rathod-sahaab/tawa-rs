@@ -8,11 +8,11 @@ use super::polyline_shared::polyline_temperature_at;
 /// Polyline interpolation strategy for time-temperature curve, const-generic version for compile-time usage.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ImplPolylineConst<const N: usize> {
-    pub points: [(f64, f64); N],
+    pub points: [(f32, f32); N],
 }
 
 impl<const N: usize> ImplPolylineConst<N> {
-    pub const fn from_array(points: [(f64, f64); N]) -> Self {
+    pub const fn from_array(points: [(f32, f32); N]) -> Self {
         let mut i = 0;
         while i < N {
             let (t, temp) = points[i];
@@ -20,7 +20,7 @@ impl<const N: usize> ImplPolylineConst<N> {
                 panic!("InvalidValue: NaN or infinite value in polyline");
             }
             // Duplicate time check using iterators is not possible in const fn yet, so keep the loop
-            if i > 0 && (points[i].0 - points[i - 1].0).abs() < f64::EPSILON {
+            if i > 0 && (points[i].0 - points[i - 1].0).abs() < f32::EPSILON {
                 panic!("DuplicateTime: Duplicate time value in polyline");
             }
             i += 1;
@@ -32,8 +32,8 @@ impl<const N: usize> ImplPolylineConst<N> {
 impl<const N: usize> TimeTemperatureCurve for ImplPolylineConst<N> {
     fn temperature_at(
         &self,
-        time: f64,
-    ) -> Result<f64, super::mod_error::TimeTemperatureCurveError> {
+        time: f32,
+    ) -> Result<f32, super::mod_error::TimeTemperatureCurveError> {
         polyline_temperature_at(&self.points, time)
     }
 }
@@ -60,7 +60,7 @@ mod tests {
     // To actually test compile-time errors, use trybuild or UI tests.
     /*
     const INVALID_NAN: ImplPolylineConst<2> = ImplPolylineConst::from_array([
-        (0.0, f64::NAN),
+        (0.0, f32::NAN),
         (1.0, 2.0),
     ]);
     const INVALID_DUP: ImplPolylineConst<2> = ImplPolylineConst::from_array([

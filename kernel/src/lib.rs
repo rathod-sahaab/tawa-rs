@@ -1,5 +1,5 @@
 #![no_std]
 
+pub(crate) mod algos;
 pub mod data;
-// pub mod folders; // Folders feature temporarily removed
 pub mod time_temperature_curve;
